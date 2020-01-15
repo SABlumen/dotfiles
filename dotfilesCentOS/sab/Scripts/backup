@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Get date and put into $now
+now=$(date +"%Y-%m-%d-%H-%M-%S")
+
+# Make filepath nname from $now and put into $filepath
+filepath="/media/raid/backup/homebackup_$now.tar.gz"
+
+# Check if the user is root
+if [ $(id -u) -eq 0 ]; then
+    # Backup with tar to $filepath
+    # If succesfull, print success, change owners and permissions, and exit with code 0
+    # If failed, print failure, and exit with code 1
+    tar -cvzpf $filepath /home/
+        if [ $? -eq 0 ]; then
+            echo "Backed up to $filepath"
+            chown sab:samba $filepath
+            chmod 770 $filepath
+            exit 0
+        else
+            echo "Failed backup" >> /dev/stderr
+            exit 1
+        fi
+else # If not root, print please run as root and exit with code 2
+    echo "Please run the script as root" >> /dev/stderr
+    exit 2
+fi

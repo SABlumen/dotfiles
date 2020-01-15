@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -f /etc/resolv.conf ]
+
+then
+echo "the file exists."
+
+else
+echo "the file does not exists."
+
+fi

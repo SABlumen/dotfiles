@@ -1,0 +1,23 @@
+#!/bin/bash
+# This script is for making a persistent alias.
+# It works by adding an alias line in the user's .bashrc
+
+# Reads input from the user to end up on the left and right side
+# of the = sign in the "alias $short=$command" line of .bashrc
+read -p "Enter short form : " short
+read -p "Enter the command : " command
+
+echo "" # New line
+
+# Reads the user's .bashrc to check if "alias $short" exists.
+# Prints to /dev/null for quiet operation.
+grep "alias $short=" /home/"$USER"/.bashrc > /dev/null
+
+# If "alias $short" is not in .bashrc this conditional
+# will append the full alias command to .bashrc
+if [ $? -eq 1 ]; then
+    echo "alias $short=\"$command\"" >> /home/"$USER"/.bashrc
+else # If "alias $short" exists, print to stderr and exit with code 1
+    echo "Alias already exists" >> /dev/stderr
+    exit 1
+fi

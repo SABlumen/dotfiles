@@ -1,0 +1,19 @@
+#!/bin/bash
+# Script to add a user to linux system
+if [ $(id -u) -eq 0 ]; then
+read -p "Enter username : " username
+egrep "^$username" /etc/passwd >/dev/null
+if [ $? -eq 0 ]; then
+echo "$username exists!"
+exit 1
+else
+read -p "Enter password : " password
+useradd $username
+echo $password | passwd --stdin $username > /etc/null
+[ $? -eq 0 ] && echo "user has been added to system!" || echo "failed to add a user!"
+fi
+
+echo "only root may add a user to the sytem"
+exit 2
+
+fi
